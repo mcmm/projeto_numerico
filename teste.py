@@ -1,1 +1,2 @@
-primeiro arquivo python uhul
+for i in range(0,5):
+    print ("oi")
