@@ -1,10 +1,7 @@
 from math import*
 
-
-def funcao1 (x):
-    f1 = sqrt(x)*cos(x)
-    return f1
-    
+######### Funções
+  
 def trapz(a, b, t, i):
     hi = (b-a)/(2**i)
     somatoria = 0
@@ -63,8 +60,43 @@ def romb(a, b, n, eps, itmax):
 
     return integral
 
+################
 
-integral = romb(0, pi/2, 4, 0.000001, 10)
+################ Programa Principal
+sair=0
+while sair !=1:
+    escolha= int(input("Escolha uma das funções a seguir para calcular a integral:\n\
+    1. x^4ln(x+sqrt(x^2+1))\n\
+    2. 1/(1-x)\n\
+    3. 1/pi(cos(sen(x))\n\
+    4. sqrt(x)cos(x)\n\
+    5. sqrt()")
+
+    if escolha ==1:
+        def funcao1 (x):
+            f1 = (x**4)*log((x+sqrt(x^2+1),e)
+            return f1 
+    elif escolha ==2:
+        def funcao1 (x):
+            f1 = 1/(1-x)
+            return f1 
+    elif escolha ==3:
+        def funcao1 (x):
+            f1 = cos(sen(x))
+            return f1 
+    elif escolha ==4:
+        def funcao1 (x):
+            f1 = sqrt(x)*cos(x)
+            return f1 
+    elif escolha ==5:
+        def funcao1 (x):
+            f1 = x
+            return f1 
+    print("Defina os intervalos da integração:\n")
+    a = int(input("Digite o valor de a:"))
+    b = int(input("Digite o valor de b:"))
+                            
+    integral = romb(0, pi/2, 4, 0.000001, 10)
 print(integral)
                 
             
