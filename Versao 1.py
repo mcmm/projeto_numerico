@@ -31,13 +31,13 @@ def romb(a, b, n, eps, itmax):
                 Tik = (T_aux[k-1] + (T_aux[k-1] - T[i-1][k-1])/((4**k)-1))
                 T_aux.append(Tik)
         T.append(T_aux)
-    print("T2:", T)
         
 
         
     while (iteracoes <= itmax):
         iteracoes += 1
         if (abs(T[n][n]-T[n][n-1]) <= eps*T[n][n]):
+            print("O método convergiu pela diferença. Foram necessárias {} iterações".format(iteracoes-1))
             break
         else:
             for i in range(0, n):
@@ -51,12 +51,11 @@ def romb(a, b, n, eps, itmax):
                     T[n][k]=t
                 else:
                     Tik = (T_aux[k-1] + (T_aux[k-1] - T[n-1][k-1])/((4**k)-1))
-                    T[n][k] = Tik
-    print("itmax:", itmax)   
+                    T[n][k] = Tik  
     integral = T[n][n]
-    print("eps:", eps*T[n][n])
-    print("diferença:", abs(T[n][n]-T[n][n-1]))
-    print("iteracoes:", iteracoes-1)
+    if iteracoes==itmax:
+        print("O método atingiu o número máximo de iterações")
+    print("O valor da integral para a precisão escolhida é de: ", integral)
 
     return integral
 
@@ -70,7 +69,7 @@ while sair==0:
     2. 1/(1-x)\n\
     3. 1/pi(cos(sen(x))\n\
     4. sqrt(x)cos(x)\n\
-    5. sqrt()\n\
+    5. Perímetro da Elipse de eixo de comprimento 2 e 3\n\
     6. Sair\n"))
 
     if escolha==6:
@@ -116,14 +115,14 @@ while sair==0:
             return f1
     elif escolha ==5:
         def funcao1 (x):
-            f1 = 4*a
+            f1 = sqrt(((1.5*cos(x))**2)+(sin(x)**2))
             return f1
     if escolha==3:
         integral =((1/pi)* romb(a, b, n, eps, itmax))
     else:
         integral = romb(a, b, n, eps, itmax)
 
-    print("O valor da integral para a precisão escolhida é de: ", integral)
+
 
 
 
