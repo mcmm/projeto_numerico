@@ -1,4 +1,15 @@
 from math import*
+#######################################################
+##                                                   ##
+##  MAP-3121 - Terceira tarefa computacional - 2016  ##
+##                                                   ##
+##                        Alunos:                    ##
+##          Bruno da Costa Braga (8993480)           ##
+##           Maria Carla Machado (8993584)           ##
+##                                                   ##
+##                       Turma 03                    ##
+##                                                   ##
+#######################################################
 
 ######### Funções
   
