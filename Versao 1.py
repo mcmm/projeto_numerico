@@ -1,7 +1,8 @@
-import math 
+from math import*
+
 
 def funcao1 (x):
-    f1 = x
+    f1 = sqrt(x)*cos(x)
     return f1
     
 def trapz(a, b, t, i):
@@ -15,38 +16,58 @@ def trapz(a, b, t, i):
 
 def romb(a, b, n, eps, itmax):
     T = []
-    t = 0
-    inicio =0 
-    iteracoes = 0
-    while (iteracoes <= itmax):    
-        for i in range (inicio, n+1):
-            T_aux = []
-            for k in range (0, i+1):
-                if k==0:
-                    print("i:", i)
-                    t = trapz(a,b,t,i)
-                    print("t:", t)
-                    T_aux.append(t)
-                else:
-                    Tik = (T_aux[k-1] + (T_aux[k-1] - T[i-1][k-1])/((4**k)-1))
-                    T_aux.append(Tik)
-        if (abs(T[n][n]-T[n][n-1] <= eps*T[n][n])):
+    h = (b-a)
+    
+    T00 = h*(funcao1(a)+funcao1(b))/2
+    T_aux = [T00]
+    T.append(T_aux)
+    t = T00 
+    iteracoes = 1
+    
+    for i in range (1, n+1):
+        T_aux = []           
+        for k in range (0, i+1):
+            if k==0:
+                t = trapz(a,b,t,i)  
+                T_aux.append(t)
+            else:
+                Tik = (T_aux[k-1] + (T_aux[k-1] - T[i-1][k-1])/((4**k)-1))
+                T_aux.append(Tik)
+        T.append(T_aux)
+    print("T2:", T)
+        
+
+        
+    while (iteracoes <= itmax):
+        iteracoes += 1
+        if (abs(T[n][n]-T[n][n-1]) <= eps*T[n][n]):
             break
         else:
-            inicio += 1
-        iteracoes += 1
+            for i in range(0, n):
+                for j in range(0, i+1):
+                    T[i][j] = T[i+1][j]
+
+            
+            for k in range (0, n+1):
+                if k==0:
+                    t = trapz(a,b,T[n-1][0],n+iteracoes-1)  
+                    T[n][k]=t
+                else:
+                    Tik = (T_aux[k-1] + (T_aux[k-1] - T[n-1][k-1])/((4**k)-1))
+                    T[n][k] = Tik
+    print("itmax:", itmax)   
     integral = T[n][n]
+    print("eps:", eps*T[n][n])
+    print("diferença:", abs(T[n][n]-T[n][n-1]))
+    print("iteracoes:", iteracoes-1)
+
     return integral
 
 
-integral = romb(0, 2, 4, 0.000001, 100)
+integral = romb(0, pi/2, 4, 0.000001, 10)
 print(integral)
                 
             
         
 
-    
 
-teste = trapz(3,10,0,10)
-print(teste)
-    
