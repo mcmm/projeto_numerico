@@ -49,6 +49,7 @@ def romb(a, b, n, eps, itmax):
         iteracoes += 1
         if (abs(T[n][n]-T[n][n-1]) <= eps*T[n][n]):
             print("O método convergiu pela diferença. Foram necessárias {} iterações".format(iteracoes-1))
+            print("Precisão:", abs(T[n][n]-T[n][n-1]))
             break
         else:
             for i in range(0, n):
@@ -66,7 +67,7 @@ def romb(a, b, n, eps, itmax):
     integral = T[n][n]
     if iteracoes==itmax:
         print("O método atingiu o número máximo de iterações")
-    print("O valor da integral para a precisão escolhida é de: ", integral)
+    
 
     return integral
 
@@ -75,7 +76,7 @@ def romb(a, b, n, eps, itmax):
 ################ Programa Principal
 sair=0
 while sair==0:
-    escolha= int(input("Escolha uma das funções a seguir para calcular a integral:\n\
+    escolha= int(input("\nEscolha uma das funções a seguir para calcular a integral:\n\
     1. x^4ln(x+sqrt(x^2+1))\n\
     2. 1/(1-x)\n\
     3. 1/pi(cos(sen(x))\n\
@@ -86,7 +87,7 @@ while sair==0:
     if escolha==6:
         break
 
-    print("Defina os intervalos da integração:\n")
+    print("Defina os intervalos da integração:")
     a = float(input("Digite o valor de a:\n"))
     b = float(input("Digite o valor de b:\n"))
 
@@ -130,8 +131,10 @@ while sair==0:
             return f1
     if escolha==3:
         integral =((1/pi)* romb(a, b, n, eps, itmax))
+        print("O valor da integral para a precisão escolhida é de: ", integral)
     else:
         integral = romb(a, b, n, eps, itmax)
+        print("O valor da integral para a precisão escolhida é de: ", integral)
 
 
 
