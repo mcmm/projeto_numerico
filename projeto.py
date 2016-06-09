@@ -72,7 +72,7 @@ for contador in range(0, n):
     print("x[{}] = {}".format(contador, x_i[contador]))
 
 #Calculando u_barra
-for i in range(0, 10*n): #para o y
+for i in range(0, 10*n+1): #para o y
     elemento = 0
     y=i/(10*n)
     print("y = {}".format(y))
@@ -85,7 +85,7 @@ for i in range(0, 10*n): #para o y
             elemento += alphas[j-1]*phi(y)
     u_barra.append(elemento)
 
-for contador in range(0, 10*n):
+for contador in range(0, 10*n+1):
     print("u_barra[{}] = {}".format(contador, u_barra[contador]))
 
 
