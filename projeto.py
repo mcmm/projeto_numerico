@@ -77,17 +77,15 @@ for i in range(0, 10*n): #para o y
     y=i/(10*n)
     print("y = {}".format(y))
     for j in range(1,n+1): #para o alpha
-        if (y>=x_i[j-1]) and (y<=x_i[j]):
+        if (y>=x_i[j-1]) and (y<x_i[j]):
             phi = lambda x:(((x-x_i[j-1])/h))
             elemento += alphas[j-1]*phi(y)
         elif (y>=x_i[j]) and (y<=x_i[j+1]):
-            phi = lambda x:(((x-x_i[j-1])/h))
+            phi = lambda x:(((x_i[j+1]-x)/h))
             elemento += alphas[j-1]*phi(y)
-##        else:
-##            elemento +=0
     u_barra.append(elemento)
 
-for contador in range(0, 10*n+1):
+for contador in range(0, 10*n):
     print("u_barra[{}] = {}".format(contador, u_barra[contador]))
 
 
