@@ -33,7 +33,9 @@ h = 1/(n+1)
 x_i = []
 y_i = []
 u_barra=[]
+u_barra_fronteira=[]
 erro_maximo = 0
+erro_maximo_fronteira = 0
 d = [] # coluna com o lado direito do sistema
 phi_linha_primeiro_intervalo = 1/h #Primeiro intervalo: [Xi-1, X]
 phi_linha_segundo_intervalo = (-1)/h #Segundo intervalo: [X, Xi+1]
@@ -71,6 +73,8 @@ if escolha_k==1:
 
     for contador in range(0, n):
         print("alpha[{}] = {}".format(contador, alphas[contador]))
+##    for contador in range(0, n):
+##        print("Matriz D[{}] = {}".format(contador, d[contador]))
 
 elif escolha_k==2:
     k=2
@@ -98,4 +102,13 @@ for i in range(10*n+1):
 print("Erro:", erro_maximo)
 
 
+#Teste de fronteira não homogênea
+L = 1
+a=u(0)
+b=u(L)
+for i in range(10*n+1):
+    u_barra_fronteira.append(u_barra[i] + a + (b-a)*(y_i[i]/L) )
+    if abs(u_barra_fronteira[i]-u(y_i[i]))>erro_maximo_fronteira:
+        erro_maximo_fronteira = u_barra_fronteira[i]-u(y_i[i])
+print("Erro Fronteira:", erro_maximo_fronteira)
 
