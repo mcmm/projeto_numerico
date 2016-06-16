@@ -79,7 +79,7 @@ if escolha_k==1:
         print("Escolha Inválida!")
 
 ## Criar diagonais da matriz A para resolver o sistema e encontrar os alphas
-    for i in range(1, n+1):
+    for i in range(0, n):
         if i ==0:
             inferior.append(0)
             principal.append((2*k)/h)
@@ -107,7 +107,7 @@ elif escolha_k==2:
     else:
         print("Escolha Inválida!")
 ## Criar diagonais da matriz A para resolver o sistema e encontrar os alphas                         
-    for i in range(1, n+1):
+    for i in range(0, n):
         if ((x_i[i] >= (L/2)-d) and x_i[i]<=((L/2)+d)):
             k = k_interno
         else:
@@ -151,16 +151,16 @@ for i in range(10*n+1): #para o y
 print("y:", y)
 print("u_barra:", u_barra)
 
-###Teste de convergencia
-##u = lambda x: (x**2)*((x-1)**2)
-##for i in range(10*n+1):
-##    if abs(u_barra[i]-u(y_i[i]))>erro_maximo:
-##        erro_maximo = u_barra[i]-u(y_i[i])
-##print("Erro:", erro_maximo)
+#Teste de convergencia
+u = lambda x: (x**2)*((x-1)**2)
+for i in range(10*n+1):
+    if abs(u_barra[i]-u(y_i[i]))>erro_maximo:
+        erro_maximo = u_barra[i]-u(y_i[i])
+print("Erro:", erro_maximo)
 
 
-###Teste de fronteira não homogênea
-##L = 1
+#Teste de fronteira não homogênea
+L = 1
 a=293
 b=293
 for i in range(10*n+1):
