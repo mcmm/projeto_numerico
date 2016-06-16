@@ -27,63 +27,118 @@ elif escolha_n==4:
 elif escolha_n==5:
     n = int(input("Digite o valor de n:"))
 
-# Definição de constantes
+# Definição de variaveis
 eps = 0.000001
-h = 1/(n+1)
+sigma = 1
+teta = sigma
 x_i = []
 y_i = []
 u_barra=[]
 u_barra_fronteira=[]
 erro_maximo = 0
 erro_maximo_fronteira = 0
-d = [] # coluna com o lado direito do sistema
-phi_linha_primeiro_intervalo = 1/h #Primeiro intervalo: [Xi-1, X]
-phi_linha_segundo_intervalo = (-1)/h #Segundo intervalo: [X, Xi+1]
+solucao = [] # coluna com o lado direito do sistema
+inferior = []
+superior = []
+principal = []
+L = 0.02
+h = L/(n+1)
+q_mais = 37500000
+q_menos = 20000000
 
 #Preenchendo o vetor x
 for i in range(n+2):
     x_i.append(i*h)
+print("xi", x_i)
 
 #Montagem do vetor d
 for i in range(1,n+1):
     #como a função de phi varia de acordo com a posição do intervalo, definimos  uma para cada parte dele
-    funcao_primeiro_intervalo = lambda x: (((x-x_i[i-1])/h))*(12*x*(1-x)-2) #mudar dps para funcao do calor
-    funcao_segundo_intervalo = lambda x: (((x_i[i+1]-x)/h))*(12*x*(1-x)-2) #mudar dps para funcao do calor
+    funcao_primeiro_intervalo = lambda x: (((x-x_i[i-1])/h))*(q_mais*(e**(((-1)*(x-(L/2))**2)/(sigma**2))) - q_menos*(e**(((-1)*(x**2))/(teta**2))-(e**(((-1)*(x-L)**2)/(sigma**2)))))
+    funcao_segundo_intervalo = lambda x: (((x_i[i+1]-x)/h))*(q_mais*(e**(((-1)*(x-(L/2))**2)/(sigma**2))) - q_menos*(e**(((-1)*(x**2))/(teta**2))-(e**(((-1)*(x-L)**2)/(sigma**2)))))
     # como a função de phi varia de acordo com a posição do intervalo, precisamos de uma integral para cada intervalo
     integral_primeiro_intervalo = romb(x_i[i-1],x_i[i],4,eps,15,funcao_primeiro_intervalo) #depois explicar os valores de n e itmax
     integral_segundo_intervalo = romb(x_i[i],x_i[i+1],4,eps,15,funcao_segundo_intervalo) #depois explicar os valores de n e itmax
     # somamos o valor obtido da integral de cada intervalo, assim temos o valor da integral total
-    integral_d = integral_primeiro_intervalo + integral_segundo_intervalo
-    d.append(integral_d)
+    integral_solucao = integral_primeiro_intervalo + integral_segundo_intervalo
+    solucao.append(integral_solucao)
+
+print("solucao", solucao)
     
-    
-#Montagem da matriz A
-escolha_k = int(input("O que você deseja fazer em relação ao material?\n1. Usar material constante (k=1)\n2. Usar material variável(k variável)\n"))
+
+escolha_k = int(input("O que você deseja fazer em relação ao material?\n1. Usar material constante\n2. Usar material variável(k variável)\n"))
 if escolha_k==1:
-    k=1
-    a = criar_diagonal_inferior(n, (-1)/h)#diagonal inferior
-    b = criar_vetor(n, 2/h) #diagonal principal
-    c = criar_diagonal_superior(n, (-1)/h) #diagonal superior
+    escolha_k_cte = int(input("Qual valor de k você gostaria de usar?\n1. k=1\n2. k=3.6\n3.Outro k constante\n"))
+    if escolha_k_cte==1:
+        k =1
+    elif escolha_k_cte==2:
+        k = 3.6
+    elif escolha_k_cte==3:
+        k = float(input("Digite o valor de k:"))
+    else:
+        print("Escolha Inválida!")
 
-    # Para resolver o sistema, é necessário fazer a decomposição LU
-    matriz_decomposta = decomposicao_LU(n, a, b, c)
+## Criar diagonais da matriz A para resolver o sistema e encontrar os alphas
+    for i in range(1, n+1):
+        if i ==0:
+            inferior.append(0)
+            principal.append((2*k)/h)
+            superior.append(((-1)*k)/h)
+        elif  i ==n:
+            inferior.append(((-1)*k)/h)
+            principal.append((2*k)/h)
+            superior.append(0)
+        else:
+            inferior.append(((-1)*k)/h)
+            principal.append((2*k)/h)
+            superior.append(((-1)*k)/h)
 
-    #resolvendo o sistema
-    alphas = resolver_sistema(d, matriz_decomposta[1], matriz_decomposta[2], c)
-
-    for contador in range(0, n):
-        print("alpha[{}] = {}".format(contador, alphas[contador]))
-##    for contador in range(0, n):
-##        print("Matriz D[{}] = {}".format(contador, d[contador]))
 
 elif escolha_k==2:
-    k=2
-    ##implementar aqui o k variavel
+    d = float(input("Escolha a distancia d (em mm) de onde o material periferico, a partir do centro, comeca:  "))
+    escolha_k_ncte = int(input("Você gostaria de:\n1. Usar os valores para um chip de Silício e Alumínio (Ks = 3.6 e Ka = 60)\
+\n2. Escolher outros valores\n"))
+    if escolha_k_ncte==1:
+        k_interno = 3.6
+        k_bordas = 60
+    elif escolha_k_ncte==2:
+        k_interno = float(input("Digite o k do material interno:"))
+        k_bordas = float(input("Digite o k do material das bordas:"))
+    else:
+        print("Escolha Inválida!")
+## Criar diagonais da matriz A para resolver o sistema e encontrar os alphas                         
+    for i in range(1, n+1):
+        if ((x_i[i] >= (L/2)-d) and x_i[i]<=((L/2)+d)):
+            k = k_interno
+        else:
+            k = k_bordas
+        if i ==0:
+            inferior.append(0)
+            principal.append((2*k)/h)
+            superior.append(((-1)*k)/h)
+        elif  i ==n:
+            inferior.append(((-1)*k)/h)
+            principal.append((2*k)/h)
+            superior.append(0)
+        else:
+            inferior.append(((-1)*k)/h)
+            principal.append((2*k)/h)
+            superior.append(((-1)*k)/h)
+
+# Para resolver o sistema, é necessário fazer a decomposição LU
+matriz_decomposta = decomposicao_LU(n, inferior, principal, superior)
+
+#resolvendo o sistema
+alphas = resolver_sistema(solucao, matriz_decomposta[1], matriz_decomposta[2], superior)
+
+for contador in range(0, n):
+    print("alpha[{}] = {}".format(contador, alphas[contador]))
+
 
 #Calculando u_barra
 for i in range(10*n+1): #para o y
     elemento = 0
-    y=i/(10*n)
+    y=(L*i)/(10*n)
     y_i.append(y)
     for j in range(1,n+1): #para o alpha
         if (y>=x_i[j-1]) and (y<x_i[j]):
@@ -93,22 +148,24 @@ for i in range(10*n+1): #para o y
             phi = lambda x:(((x_i[j+1]-x)/h))
             elemento += alphas[j-1]*phi(y)
     u_barra.append(elemento)
+print("y:", y)
+print("u_barra:", u_barra)
 
-#Teste de convergencia
-u = lambda x: (x**2)*((x-1)**2)
+###Teste de convergencia
+##u = lambda x: (x**2)*((x-1)**2)
+##for i in range(10*n+1):
+##    if abs(u_barra[i]-u(y_i[i]))>erro_maximo:
+##        erro_maximo = u_barra[i]-u(y_i[i])
+##print("Erro:", erro_maximo)
+
+
+###Teste de fronteira não homogênea
+##L = 1
+a=293
+b=293
 for i in range(10*n+1):
-    if abs(u_barra[i]-u(y_i[i]))>erro_maximo:
-        erro_maximo = u_barra[i]-u(y_i[i])
-print("Erro:", erro_maximo)
-
-
-#Teste de fronteira não homogênea
-L = 1
-a=u(0)
-b=u(L)
-for i in range(10*n+1):
-    u_barra_fronteira.append(u_barra[i] + a + (b-a)*(y_i[i]/L) )
-    if abs(u_barra_fronteira[i]-u(y_i[i]))>erro_maximo_fronteira:
-        erro_maximo_fronteira = u_barra_fronteira[i]-u(y_i[i])
-print("Erro Fronteira:", erro_maximo_fronteira)
+    u_barra_fronteira.append((u_barra[i] + a + (b-a)*(y_i[i]/L))-273 )
+##    if abs(u_barra_fronteira[i]-u(y_i[i]))>erro_maximo_fronteira:
+##        erro_maximo_fronteira = u_barra_fronteira[i]-u(y_i[i])
+print("U Fronteira:", u_barra_fronteira)
 
